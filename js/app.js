@@ -32,7 +32,6 @@ var showQuestion = function(question) {
 };
 
 var showInspiration = function(item) {
-	console.log(item);
 	var result = $('.templates .inspiration').clone();
 
 	// Set user image
@@ -116,7 +115,7 @@ var getTopAnswerers = function(tag) {
 		data: request
 	})
 	.done(function(result) {
-		var searchResults = showSearchResults(request.taggged, result.items.length);
+		var searchResults = showSearchResults(request.tagged, result.items.length);
 		$('.search-results').html(searchResults);
 
 		$.each(result.items, function(i, item) {
@@ -144,7 +143,6 @@ $(document).ready( function() {
 		e.preventDefault();
 		$('.results').html('');
 		var tag = $(this).find("input[name='answerers']").val();
-		// console.log(tag);
 		getTopAnswerers(tag);
 	});
 });
