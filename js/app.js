@@ -35,7 +35,22 @@ var showInspiration = function(item) {
 	console.log(item);
 	var result = $('.templates .inspiration').clone();
 
-	result.find('.user-name').text(item.user.display_name);
+	// Set user image
+	var imgElem = result.find('.user-image img');
+	imgElem.attr('src', item.user.profile_image);
+
+	// Set the user name
+	var userElem = result.find('.user-name a');
+	userElem.attr('href', item.user.link);
+	userElem.text(item.user.display_name);
+
+	// Set the user type
+	var userTypeElem = result.find('.user-type');
+	userTypeElem.text(item.user.user_type);
+
+	// Set reputation
+	var repElem = result.find('.reputation');
+	repElem.text(item.user.reputation);
 	
 	return result;
 };
@@ -96,9 +111,9 @@ var getTopAnswerers = function(tag) {
 	};
 	$.ajax({
 		url: "http://api.stackexchange.com/2.2/tags/" + tag + "/top-answerers/all_time",
-		data: request,
 		dataType: "jsonp",
-		type: "GET"
+		type: "GET",
+		data: request
 	})
 	.done(function(result) {
 		var searchResults = showSearchResults(request.taggged, result.items.length);
@@ -107,8 +122,11 @@ var getTopAnswerers = function(tag) {
 		$.each(result.items, function(i, item) {
 			var inspirer = showInspiration(item);
 			$('.results').append(inspirer);
-		});		
-		console.log(result);
+		});
+	})
+	.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
+		var errorElem = showError(error);
+		$('.search-results').append(errorElem);
 	});
 };
 
